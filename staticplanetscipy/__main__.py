@@ -58,6 +58,16 @@ def get_item_id(feed_item):
     return h.hexdigest()
 
 
+def sanitize_html(content, truncate_words, link):
+    content = bleach.clean(content, strip=True)
+    parts = content.split(" ")
+    if len(parts) > truncate_words:
+        content = " ".join(parts[:truncate_words])
+        content = bleach.clean(content, strip=True)
+        content += ' <a href="">(continued...)</a>'.format(quote_plus(link))
+    return content
+
+
 def fetch_url(url, cache_dir, expire_time):
     filename = get_filename(url, cache_dir)
 
@@ -72,8 +82,9 @@ def fetch_url(url, cache_dir, expire_time):
 
     # Fetch
     print("{0}: {1}".format(url, os.path.basename(filename)))
+    headers = {'User-agent': 'staticplanetscipy'}
     try:
-        with requests.get(url, stream=True) as r, open(filename, 'wb') as f:
+        with requests.get(url, headers=headers, stream=True) as r, open(filename, 'wb') as f:
             shutil.copyfileobj(r.raw, f)
     except:
         if os.path.exists(filename):
@@ -155,14 +166,9 @@ def main():
         for entry in entries:
             # Truncate and sanitize HTML content
             try:
-                content = entry['summary'] or ""
-                content = bleach.clean(content, strip=True)
-                parts = content.split(" ")
-                if len(parts) > config["truncate_words"]:
-                    content = " ".join(parts[:config["truncate_words"]])
-                    content = bleach.clean(content, strip=True)
-                    content += ' <a href="">(continued...)</a>'.format(quote_plus(entry['link'] or ""))
-                print(content)
+                content = sanitize_html(entry["summary"] or "",
+                                        config["truncate_words"],
+                                        entry["link"] or "")
             except Exception as exc:
                 print("{0}: content failed: {1}".format(url, exc))
                 continue
