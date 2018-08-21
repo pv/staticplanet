@@ -70,11 +70,11 @@
                   <div class="section feeditem">
                     <div>
                       <span class="date">{{ item.date }}</span>
-                      <span><a href="{{item.feed.url}}">{{item.feed.title}}</span>
+                      <span><a href="{{ item.feed.url|urlencode }}">{{item.feed.title}}</a></span>
                     </div>
-                    <h4><a href="{{ item.url }}">{{ item.title }}</h4>
+                    <h4><a href="{{ item.url|urlencode }}">{{ item.title }}</a></h4>
                     {% if item.description %}
-                    {{ item.description }}
+                    {{ item.description|safe }}
                     {% endif %}
                   </div>
                   {% endfor %}
@@ -87,12 +87,12 @@
               <div class="well sidebar-nav">
                 <ul class="nav nav-list">
                   <li class="nav-header">Feeds</li>
-                  <li><a href="atom.xml">Combined Feed</a></li>
+                  <li><a href="feed.xml">Combined Feed</a></li>
                   <li class="nav-header">Blogs</li>
                 </ul>
                 <ul class="nav nav-list feedlist">
                   {% for feed in feeds %}
-                  <li><a href="{{ feed.url }}">{{ feed.title }}</a></li>
+                  <li><a href="{{ feed.url|urlencode }}">{{ feed.title }}</a></li>
                   {% endfor %}
                 </ul>
               </div>

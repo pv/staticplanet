@@ -4,6 +4,7 @@
     "url": "https://planet.scipy.org/",
     "expire_secs": 3600,
     "max_items": 100,
+    "truncate_words": 100,
     "feeds": [
         "https://pav.iki.fi/blog.xml"
     ]

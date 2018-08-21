@@ -21,11 +21,14 @@ import jinja2
 
 import requests
 import feedparser
+import bleach
 
 try:
     import requests_cache
 except ImportError:
     requests_cache = None
+
+from urllib.parse import quote_plus
 
 from . import atom
 
@@ -111,7 +114,7 @@ def main():
     os.makedirs(html_dir)
 
     with open(index_file, 'r') as f:
-        template = jinja2.Template(f.read())
+        template = jinja2.Template(f.read(), autoescape="html")
 
     # Setup requests_cache, if available
     if requests_cache is not None:
@@ -150,18 +153,32 @@ def main():
         num_items = 0
 
         for entry in entries:
+            # Truncate and sanitize HTML content
+            try:
+                content = entry['summary'] or ""
+                content = bleach.clean(content, strip=True)
+                parts = content.split(" ")
+                if len(parts) > config["truncate_words"]:
+                    content = " ".join(parts[:config["truncate_words"]])
+                    content = bleach.clean(content, strip=True)
+                    content += ' <a href="">(continued...)</a>'.format(quote_plus(entry['link'] or ""))
+                print(content)
+            except Exception as exc:
+                print("{0}: content failed: {1}".format(url, exc))
+                continue
+
             try:
                 feeditem = FeedItem(
                     feed=feed,
                     url=entry['link'] or "",
                     title=entry['title'] or "",
                     date=datetime.datetime(*entry['published_parsed'][0:6]),
-                    description=entry['summary'] or "")
+                    description=content)
                 items.append(feeditem)
                 num_items += 1
             except Exception as exc:
-                    print("{0}: entry failed: {1}".format(url, exc))
-                    continue
+                print("{0}: entry failed: {1}".format(url, exc))
+                continue
 
         print("{0}: {1} items".format(url, num_items))
 
