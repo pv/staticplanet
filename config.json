@@ -1,0 +1,10 @@
+{
+    "title": "Planet Scipy",
+    "address": "planet.scipy.org",
+    "url": "https://planet.scipy.org/",
+    "expire_secs": 3600,
+    "max_items": 100,
+    "feeds": [
+        "https://pav.iki.fi/blog.xml"
+    ]
+}

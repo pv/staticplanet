@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="_static/css/spc-extend.css">
+    <link rel="stylesheet" href="_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="_static/scipy-org.css" type="text/css" >
+    <link rel="alternate" type="application/rss+xml" title="{{ title }}" href="atom.xml">
+  </head>
+  <body>
+    <style type="text/css">
+      .top-logo-header {
+          text-align: left;
+          background-color: rgb(140, 170, 230);
+          border-bottom: 8px solid rgb(0, 51, 153);
+          margin-top: 10px;
+          padding: 5px;
+          box-shadow: 0px 0px 3px rgb(136, 136, 136);
+      }
+      ul.feedlist li a:after {
+          margin-left: 5px;
+          content: url("_static/external-link.png");
+      }
+      div.feeditem {
+          margin-left: 2em;
+          border-left: 4px #ccc solid;
+          padding-left: 1em;
+          margin-bottom: 2ex;
+      }
+      div.feeditem span.date {
+          margin-right: 1em;
+      }
+      div.description {
+          max-height: 30ex;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding-bottom: 1ex;
+          padding-top: 1ex;
+      }
+    </style>
+    <div class="container">
+      <div class="top-logo-header">
+        <a href="#">
+          <img style="border: 0;" alt="SciPy" src="_static/logo.gif"></a>
+      </div>
+    </div>
+    <div class="container">
+      <div class="main">
+        <div class="row-fluid">
+          <div class="span9">
+            <div class="row-fluid">
+              <div class="span9">
+  	        <div class="spc-navbar">
+                  <ul class="nav nav-pills pull-left">
+                    <li class="active"><a href="https://scipy.org">SciPy.org</a></li>
+                  </ul>
+	        </div>
+              </div>
+            </div>
+            <div class="bodywrapper">
+              <div class="body" id="spc-section-body">
+                <h1>{{ title }}</h1>
+
+                <b> No, this is just proof of concept, the page does not auto-update </b>
+
+                <div class="section">
+                  {% for item in items %}
+                  <div class="section feeditem">
+                    <div>
+                      <span class="date">{{ item.date }}</span>
+                      <span><a href="{{item.feed.url}}">{{item.feed.title}}</span>
+                    </div>
+                    <h4><a href="{{ item.url }}">{{ item.title }}</h4>
+                    {% if item.description %}
+                    {{ item.description }}
+                    {% endif %}
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="spc-rightsidebar span3">
+            <div class="sphinxsidebarwrapper">
+              <div class="well sidebar-nav">
+                <ul class="nav nav-list">
+                  <li class="nav-header">Feeds</li>
+                  <li><a href="atom.xml">Combined Feed</a></li>
+                  <li class="nav-header">Blogs</li>
+                </ul>
+                <ul class="nav nav-list feedlist">
+                  {% for feed in feeds %}
+                  <li><a href="{{ feed.url }}">{{ feed.title }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="container">
+  <div class="footer">
+    <div class="row-fluid">
+      <ul class="inline pull-left">
+        <li>
+          Created by <a href="https://github.com/pv/staticplanetscipy/">staticplanetscipy</a>.
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>
