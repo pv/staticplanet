@@ -70,9 +70,9 @@
                   <div class="section feeditem">
                     <div>
                       <span class="date">{{ item.date }}</span>
-                      <span><a href="{{ item.feed.url|urlencode }}">{{item.feed.title}}</a></span>
+                      <span><a href="{{ item.feed.url }}">{{item.feed.title}}</a></span>
                     </div>
-                    <h4><a href="{{ item.url|urlencode }}">{{ item.title }}</a></h4>
+                    <h4><a href="{{ item.url }}">{{ item.title }}</a></h4>
                     {% if item.description %}
                     {{ item.description|safe }}
                     {% endif %}
@@ -92,7 +92,7 @@
                 </ul>
                 <ul class="nav nav-list feedlist">
                   {% for feed in feeds %}
-                  <li><a href="{{ feed.url|urlencode }}">{{ feed.title }}</a></li>
+                  <li><a href="{{ feed.url }}">{{ feed.title }}</a></li>
                   {% endfor %}
                 </ul>
               </div>
@@ -111,6 +111,17 @@
           Created by <a href="https://github.com/pv/staticplanetscipy/">staticplanetscipy</a>.
         </li>
       </ul>
+    </div>
+    <div class="row-fluid">
+      {% if failed_urls %}
+      <hr>
+      <p>Failed to fetch:
+        <ul>
+          {% for url in failed_urls %}
+          <li>{{ url }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
     </div>
   </div>
 </div>

@@ -17,8 +17,8 @@ import shutil
 import time
 import collections
 import datetime
-import jinja2
 
+import jinja2
 import requests
 import feedparser
 import bleach
@@ -41,57 +41,6 @@ Feed = collections.namedtuple(
 FeedItem = collections.namedtuple(
     'FeedItem',
     ['feed', 'url', 'date', 'title', 'description'])
-
-
-def get_filename(url, cache_dir):
-    return os.path.join(cache_dir,
-                        hashlib.sha256(url.encode('utf-8')).hexdigest()[:32])
-
-
-def get_item_id(feed_item):
-    h = hashlib.sha256()
-    h.update(feed_item.feed.url.encode('utf-8'))
-    h.update(feed_item.url.encode('utf-8'))
-    h.update(feed_item.date.strftime('%Y-%m-%d %H:%M:%S').encode('utf-8'))
-    h.update(feed_item.title.encode('utf-8'))
-    h.update(feed_item.description.encode('utf-8'))
-    return h.hexdigest()
-
-
-def sanitize_html(content, truncate_words, link):
-    content = bleach.clean(content, strip=True)
-    parts = content.split(" ")
-    if len(parts) > truncate_words:
-        content = " ".join(parts[:truncate_words])
-        content = bleach.clean(content, strip=True)
-        content += ' <a href="">(continued...)</a>'.format(quote_plus(link))
-    return content
-
-
-def fetch_url(url, cache_dir, expire_time):
-    filename = get_filename(url, cache_dir)
-
-    # Don't fetch if mtime new enough
-    try:
-        stat = os.stat(filename)
-        if time.time() < stat.st_mtime + expire_time:
-            print("{0} (cached): {1}".format(url, os.path.basename(filename)))
-            return filename
-    except OSError:
-        pass
-
-    # Fetch
-    print("{0}: {1}".format(url, os.path.basename(filename)))
-    headers = {'User-agent': 'staticplanetscipy'}
-    try:
-        with requests.get(url, headers=headers, stream=True) as r, open(filename, 'wb') as f:
-            shutil.copyfileobj(r.raw, f)
-    except:
-        if os.path.exists(filename):
-            os.unlink(filename)
-        raise
-
-    return filename
 
 
 def main():
@@ -147,6 +96,8 @@ def main():
 
     feeds = []
     items = []
+
+    failed_urls = []
     
     for url, fn in files.items():
         try:
@@ -158,7 +109,8 @@ def main():
 
             entries = data['entries']
         except Exception as exc:
-            print("{0}: failed: {1}".format(url, exc))
+            print("FAIL: {0}: feed: {1}".format(url, exc))
+            failed_urls.append(url)
             continue
 
         num_items = 0
@@ -166,27 +118,33 @@ def main():
         for entry in entries:
             # Truncate and sanitize HTML content
             try:
-                content = sanitize_html(entry["summary"] or "",
+                content = sanitize_html(entry.get("summary", ""),
                                         config["truncate_words"],
-                                        entry["link"] or "")
+                                        entry["link"])
             except Exception as exc:
-                print("{0}: content failed: {1}".format(url, exc))
+                print("FAIL: {0}: content: {1}".format(url, exc))
                 continue
 
             try:
+                date = entry.get('published_parsed', entry.get('updated_parsed'))
+                if date is not None:
+                    date = datetime.datetime(*date[0:6])
+                else:
+                    date = None
+
                 feeditem = FeedItem(
                     feed=feed,
-                    url=entry['link'] or "",
-                    title=entry['title'] or "",
-                    date=datetime.datetime(*entry['published_parsed'][0:6]),
+                    url=entry['link'],
+                    title=entry.get('title', "Untitled"),
+                    date=date,
                     description=content)
                 items.append(feeditem)
                 num_items += 1
             except Exception as exc:
-                print("{0}: entry failed: {1}".format(url, exc))
+                print("FAIL: {0}: entry: {1}".format(url, exc))
                 continue
 
-        print("{0}: {1} items".format(url, num_items))
+        print("OK  : {0}: {1} items".format(url, num_items))
 
     # Update date cache (we don't fully trust feed date information)
     print("\nProcessing...")
@@ -201,6 +159,16 @@ def main():
 
     date_cache = new_date_cache
 
+    # Backfill dateless feed item dates
+    for j, item in enumerate(items):
+        if item.date is None:
+            item_id = get_item_id(item)
+            items[j] = FeedItem(feed=item.feed,
+                                url=item.url,
+                                title=item.title,
+                                date=datetime.datetime.fromtimestamp(date_cache[item_id]),
+                                description=item.description)
+
     # Date sort (allow the feed only set an earlier date than the
     # first time we saw the item)
     def sort_key(item):
@@ -208,6 +176,7 @@ def main():
         return min(datetime.datetime.fromtimestamp(date_cache[item_id]), item.date)
 
     items.sort(key=sort_key, reverse=True)
+    feeds.sort(key=lambda item: item.title.lower())
 
     # Limit items
     del items[config['max_items']:]
@@ -219,7 +188,8 @@ def main():
         title=config["title"],
         url=config["url"],
         feeds=feeds,
-        items=items)
+        items=items,
+        failed_urls=failed_urls)
 
     with open(os.path.join(html_dir, 'index.html'), 'w') as f:
         f.write(html)
@@ -249,6 +219,56 @@ def main():
                     author=config["title"],
                     title=config["title"],
                     link=config["url"])
+
+
+def get_filename(url, cache_dir):
+    return os.path.join(cache_dir,
+                        hashlib.sha256(url.encode('utf-8')).hexdigest()[:32])
+
+
+def get_item_id(feed_item):
+    h = hashlib.sha256()
+    h.update(feed_item.feed.url.encode('utf-8'))
+    h.update(feed_item.url.encode('utf-8'))
+    h.update(feed_item.title.encode('utf-8'))
+    h.update(feed_item.description.encode('utf-8'))
+    return h.hexdigest()
+
+
+def sanitize_html(content, truncate_words, link):
+    content = bleach.clean(content, strip=True)
+    parts = content.split(" ")
+    if len(parts) > truncate_words:
+        content = " ".join(parts[:truncate_words])
+        content = bleach.clean(content, strip=True)
+        content += ' <a href="">(continued...)</a>'.format(quote_plus(link))
+    return content
+
+
+def fetch_url(url, cache_dir, expire_time):
+    filename = get_filename(url, cache_dir)
+
+    # Don't fetch if mtime new enough
+    try:
+        stat = os.stat(filename)
+        if time.time() < stat.st_mtime + expire_time:
+            print("{0} (cached): {1}".format(url, os.path.basename(filename)))
+            return filename
+    except OSError:
+        pass
+
+    # Fetch
+    print("{0}: {1}".format(url, os.path.basename(filename)))
+    headers = {'User-agent': 'staticplanetscipy'}
+    try:
+        with requests.get(url, headers=headers, stream=True) as r, open(filename, 'wb') as f:
+            shutil.copyfileobj(r.raw, f)
+    except:
+        if os.path.exists(filename):
+            os.unlink(filename)
+        raise
+
+    return filename
 
 
 if sys.version_info[0] < 3:

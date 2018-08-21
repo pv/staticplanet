@@ -1,0 +1,7 @@
+*~
+*.pyc
+__pycache__
+/data
+/html
+/cache
+/env
