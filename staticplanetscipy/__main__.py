@@ -241,7 +241,7 @@ def sanitize_html(content, truncate_words, link):
     if len(parts) > truncate_words:
         content = " ".join(parts[:truncate_words])
         content = bleach.clean(content, strip=True)
-        content += ' <a href="{0}">(continued...)</a>'.format(quote_plus(link))
+        content += ' <a href="{0}">(continued...)</a>'.format(link)
     return content
 
 
