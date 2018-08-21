@@ -89,7 +89,7 @@ def main():
         try:
             files[url] = fetch_url(url, cache_dir, config['expire_secs'])
         except Exception as exc:
-            print("{0}: failed to fetch: {1}".format(url, exc))
+            print("FAIL: {0}: {1}".format(url, exc))
 
     # Parse
     print("\nParsing:")
