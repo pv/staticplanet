@@ -8,7 +8,7 @@ env:
 	./env/bin/pip install -r requirements.txt
 
 env-upgrade:
-	./env/bin/python -mpip install -U --upgrade-strategy=only-if-needed `./env/bin/python -mpip freeze --user|sed -e 's/==.*//'`
+	./env/bin/python -mpip install -U --upgrade-strategy=only-if-needed `./env/bin/python -mpip freeze|sed -e 's/==.*//'`
 
 build: env env-upgrade
 	./env/bin/python -mstaticplanetscipy config.json
