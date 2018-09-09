@@ -32,3 +32,10 @@ div.description {
     padding-bottom: 1ex;
     padding-top: 1ex;
 }
+
+blockquote p {
+    margin-bottom: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
