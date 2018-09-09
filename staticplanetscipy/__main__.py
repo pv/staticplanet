@@ -118,7 +118,12 @@ def main():
         for entry in entries:
             # Truncate and sanitize HTML content
             try:
-                content = sanitize_html(entry.get("summary", ""),
+                content = entry.get("summary_detail", None)
+                if content:
+                    content = content.value.strip()
+                if not content:
+                    content = entry.get("summary", "")
+                content = sanitize_html(content,
                                         config["truncate_words"],
                                         entry["link"])
             except Exception as exc:
