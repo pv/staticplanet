@@ -4,12 +4,11 @@ all: build
 
 env:
 	$(PYTHON) -mvenv env
-	./env/bin/pip install pip wheel setuptools
+	./env/bin/pip install -U pip wheel setuptools
 	./env/bin/pip install -r requirements.txt
 
 env-upgrade:
-	./env/bin/python -mpip install --upgrade-strategy=only-if-needed -r requirements.txt
-	./env/bin/python -mpip install -U --upgrade-strategy=only-if-needed `./env/bin/python -mpip freeze|sed -e 's/==.*//'`
+	./env/bin/python -mpip install -U -r requirements.txt
 
 build: env env-upgrade
 	./env/bin/python -mstaticplanetscipy config.json

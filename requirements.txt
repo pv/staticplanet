@@ -1,3 +1,4 @@
+pip
 bleach
 feedparser
 jinja2
