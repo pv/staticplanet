@@ -80,12 +80,15 @@ def main():
     # Fetch
     print("\nFetching:")
 
+    failed_urls = []
+
     files = {}
     for url in config['feeds']:
         try:
             files[url] = fetch_url(url, cache_dir, config['expire_secs'])
         except Exception as exc:
             print("FAIL: {0}: {1}".format(url, exc))
+            failed_urls.append(url)
 
     # Parse
     print("\nParsing:")
@@ -93,8 +96,6 @@ def main():
     feeds = []
     items = []
 
-    failed_urls = []
-    
     for url, fn in files.items():
         try:
             data = feedparser.parse(fn)
@@ -194,7 +195,7 @@ def main():
         feeds=feeds,
         items=items,
         updated=updated,
-        failed_urls=failed_urls)
+        failed_urls=sorted(failed_urls))
 
     with open(os.path.join(html_dir, 'index.html'), 'w') as f:
         f.write(html)
@@ -265,7 +266,7 @@ def fetch_url(url, cache_dir, expire_time):
     try:
         stat = os.stat(filename)
         if time.time() < stat.st_mtime + expire_time:
-            print("{0} (cached): {1}".format(url, os.path.basename(filename)))
+            print("CACH: {0}: {1}".format(url, os.path.basename(filename)))
             return filename
     except OSError:
         pass
@@ -278,7 +279,7 @@ def fetch_url(url, cache_dir, expire_time):
                                cache=FileCache(web_cache))
 
     # Fetch
-    print("{0}: {1}".format(url, os.path.basename(filename)))
+    print("GET : {0}: {1}".format(url, os.path.basename(filename)))
     headers = {'User-agent': 'staticplanetscipy'}
     try:
         with session.get(url, headers=headers, stream=True) as r, open(filename + '.new', 'wb') as f:
