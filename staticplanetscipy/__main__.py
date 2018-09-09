@@ -183,12 +183,15 @@ def main():
 
     # Produce HTML
     print("\nWriting HTML...")
-    
+
+    updated = datetime.datetime.utcnow()
+
     html = template.render(
         title=config["title"],
         url=config["url"],
         feeds=feeds,
         items=items,
+        updated=updated,
         failed_urls=failed_urls)
 
     with open(os.path.join(html_dir, 'index.html'), 'w') as f:
