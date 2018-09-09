@@ -1,0 +1,17 @@
+Example shell script for cron + netlify.com:
+
+
+#!/bin/sh
+set -e
+cd /home/planetscipy/var
+
+run() {
+    git -C staticplanet fetch origin
+    git -C staticplanet reset --hard origin/master
+    git -C staticplanet submodule update --init
+    make -C staticplanet
+    ./netlifyctl deploy -A `cat token` -n planetscipy -s `cat site-id` -P staticplanet/html/
+}
+
+run < /dev/null > cron.log 2>&1
+
