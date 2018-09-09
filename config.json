@@ -4,7 +4,7 @@
     "url": "https://planet.scipy.org/",
     "expire_secs": 3600,
     "max_items": 100,
-    "truncate_words": 100,
+    "truncate_words": 160,
     "feeds": [
         "http://scipystatsimprovements.blogspot.mx/feeds/posts/default?alt=rss",
         "http://acsgsoc15.wordpress.com/feed/atom",

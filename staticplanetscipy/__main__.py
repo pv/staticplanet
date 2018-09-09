@@ -244,11 +244,19 @@ def get_item_id(feed_item):
 
 
 def sanitize_html(content, truncate_words, link):
-    content = bleach.clean(content, strip=True)
+    tags = ['a', 'abbr', 'acronym', 'b', 'bdi', 'bdo', 'blockquote', 'br',
+        'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'div',
+        'dl', 'dt', 'em', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'mark',
+        'ol', 'p', 'pre', 'q', 'rp', 'rt', 'ruby', 's', 'small', 'span',
+        'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th',
+        'thead', 'tr', 'u', 'ul',
+    ]
+
+    content = bleach.clean(content, tags=tags, strip=True)
     parts = content.split(" ")
     if len(parts) > truncate_words:
         content = " ".join(parts[:truncate_words])
-        content = bleach.clean(content, strip=True)
+        content = bleach.clean(content, tags=tags, strip=True)
         content += ' <a href="{0}">(continued...)</a>'.format(link)
     return content
 
