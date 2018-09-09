@@ -4,10 +4,14 @@ all: build
 
 env:
 	$(PYTHON) -mvenv env
+	./env/bin/pip install pip wheel setuptools
 	./env/bin/pip install -r requirements.txt
 
-build: env
-	./env/bin/python3 -mstaticplanetscipy config.json
+env-upgrade:
+	./env/bin/python -mpip install -U --upgrade-strategy=only-if-needed `./env/bin/python -mpip freeze --user|sed -e 's/==.*//'`
+
+build: env env-upgrade
+	./env/bin/python -mstaticplanetscipy config.json
 
 gh-pages: html/index.html
 	rm -rf html/.git
@@ -23,4 +27,4 @@ gh-pages: html/index.html
 clean:
 	rm -rf cache html env
 
-.PHONY: all build gh-pages clean
+.PHONY: all build gh-pages clean env-upgrade
