@@ -24,9 +24,10 @@ import feedparser
 import bleach
 
 try:
-    import requests_cache
+    from cachecontrol import CacheControl
+    from cachecontrol.caches.file_cache import FileCache
 except ImportError:
-    requests_cache = None
+    CacheControl = None
 
 from urllib.parse import quote_plus
 
@@ -75,11 +76,6 @@ def main():
 
     with open(index_file, 'r') as f:
         template = jinja2.Template(f.read(), autoescape="html")
-
-    # Setup requests_cache, if available
-    if requests_cache is not None:
-        requests_cache.install_cache(os.path.join(cache_dir, 'requests_cache'),
-                                     expire_after=config['expire_secs'])
 
     # Fetch
     print("\nFetching:")
@@ -274,16 +270,29 @@ def fetch_url(url, cache_dir, expire_time):
     except OSError:
         pass
 
+    # Setup HTTP cache, if available
+    session = requests.session()
+    if CacheControl is not None:
+        web_cache = os.path.join(cache_dir, 'web-cache')
+        session = CacheControl(session,
+                               cache=FileCache(web_cache))
+
     # Fetch
     print("{0}: {1}".format(url, os.path.basename(filename)))
     headers = {'User-agent': 'staticplanetscipy'}
     try:
-        with requests.get(url, headers=headers, stream=True) as r, open(filename, 'wb') as f:
-            shutil.copyfileobj(r.raw, f)
+        with session.get(url, headers=headers, stream=True) as r, open(filename + '.new', 'wb') as f:
+            for chunk in r.iter_content(chunk_size=65536):
+                f.write(chunk)
+        os.rename(filename + '.new', filename)
     except:
-        if os.path.exists(filename):
+        try:
             os.unlink(filename)
+        except FileNotFoundError:
+            pass
         raise
+    finally:
+        session.close()
 
     return filename
 

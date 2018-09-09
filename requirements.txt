@@ -2,4 +2,4 @@ bleach
 feedparser
 jinja2
 requests
-requests-cache
+cachecontrol[filecache]
