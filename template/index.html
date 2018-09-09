@@ -68,7 +68,7 @@
                   <div class="section feeditem">
                     <div>
                       <span class="date">{{ item.date }}</span>
-                      <span><a href="{{ item.feed.url }}">{{item.feed.title}}</a></span>
+                      <span><a href="{{ item.feed.url }}" data-id="{{ item.feed.id }}">{{item.feed.title}}</a></span>
                     </div>
                     <h4><a href="{{ item.url }}">{{ item.title }}</a></h4>
                     {% if item.description %}
@@ -90,7 +90,7 @@
                 </ul>
                 <ul class="nav nav-list feedlist">
                   {% for feed in feeds %}
-                  <li><a href="{{ feed.url }}">{{ feed.title }}</a></li>
+                  <li><a href="{{ feed.url }}" data-id="{{ feed.id }}">{{ feed.title }}</a></li>
                   {% endfor %}
                 </ul>
               </div>

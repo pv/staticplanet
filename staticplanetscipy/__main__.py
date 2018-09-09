@@ -35,7 +35,7 @@ from . import atom
 
 Feed = collections.namedtuple(
     'Feed',
-    ['title', 'url'])
+    ['id', 'title', 'url'])
 
 
 FeedItem = collections.namedtuple(
@@ -103,7 +103,8 @@ def main():
         try:
             data = feedparser.parse(fn)
 
-            feed = Feed(title=data['feed']['title'],
+            feed = Feed(id=url,
+                        title=data['feed']['title'],
                         url=data['feed']['link'])
             feeds.append(feed)
 
