@@ -162,6 +162,10 @@ def main():
 
     date_cache = new_date_cache
 
+    with open(date_cache_file + '.new', 'w') as f:
+        json.dump(date_cache, f)
+    os.rename(date_cache_file + '.new', date_cache_file)
+
     # Backfill dateless feed item dates
     for j, item in enumerate(items):
         if item.date is None:
