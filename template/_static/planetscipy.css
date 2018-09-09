@@ -9,7 +9,7 @@
 
 ul.feedlist li a:after {
     margin-left: 5px;
-    content: url("_static/external-link.png");
+    content: url("external-link.png");
 }
 
 div.feeditem {
