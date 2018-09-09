@@ -12,6 +12,9 @@ env-upgrade:
 
 build: env env-upgrade
 	./env/bin/python -mstaticplanetscipy config.json
+# Clear web cache
+	-find cache/web-cache/ -type f -a -mtime +5 -delete
+	-find cache/web-cache/ -empty -delete
 
 gh-pages: html/index.html
 	rm -rf html/.git
