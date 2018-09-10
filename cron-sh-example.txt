@@ -11,7 +11,8 @@ How to set it up:
    It needs to run `make` and publish files under `html/` to your
    static html storage. See below for example
 
-As of Sep 2018, Planet Scipy runs on https://netlify.com (thanks!)
+As of Sep 2018, Planet Scipy hosts its static HTML on https://netlify.com (thanks!),
+the cron machine is some box somewhere.
 
 Steps taken: 
 
