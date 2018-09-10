@@ -1,4 +1,6 @@
-Example shell script for cron + netlify.com:
+Example shell script for periodic updates with cron + netlify.com.  Note that
+you can create the site with netlifyctl -- there's no git repository involved
+(at least visible to us) in the static HTML storage.
 
 
 #!/bin/sh
