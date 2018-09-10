@@ -1,6 +1,6 @@
 How to set it up:
 
-1. Get and configure some web space to upload static HTTP pages.
+1. Get and configure some web space to upload static HTML pages.
    There are many options.
 
 2. Get a machine that can run periodic cron jobs reliably.
