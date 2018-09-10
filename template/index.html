@@ -23,11 +23,11 @@
           <div class="span9">
             <div class="row-fluid">
               <div class="span9">
-  	        <div class="spc-navbar">
+                <div class="spc-navbar">
                   <ul class="nav nav-pills pull-left">
                     <li class="active"><a href="https://scipy.org">SciPy.org</a></li>
                   </ul>
-	        </div>
+                </div>
               </div>
             </div>
             <div class="bodywrapper">
@@ -64,10 +64,11 @@
                   <li><a href="{{ feed.url }}" data-id="{{ feed.id }}">{{ feed.title }}</a></li>
                   {% endfor %}
                 </ul>
-		<div style="margin-top: 1ex;">
-		  To add/remove blogs, send 
-		  <a href="https://github.com/pv/staticplanet/pulls/">a pull request</a>.
-		</div>
+                <div style="margin-top: 1ex;">
+                  To add/remove blogs, send 
+                  <a href="https://github.com/pv/staticplanet/pulls/">a pull request</a>.
+                  Contact: <a href="https://github.com/scipy/scipy.org/issues">issue tracker</a>.
+                </div>
               </div>
             </div>
           </div>
@@ -84,7 +85,14 @@
           Updated {{ updated.strftime("%Y-%m-%d %H:%M:%S UTC") }}.
         </li>
         <li>
-          Created by <a href="https://github.com/pv/staticplanet/">staticplanet</a>.
+          All blog posts are by third parties, not scipy.org.
+        </li>
+        <li>
+          The posts are aggregated here by an automated mechanism,
+          <a href="https://github.com/pv/staticplanet/">staticplanet</a>.
+        </li>
+        <li>
+          Contact: <a href="https://github.com/scipy/scipy.org/issues">issue tracker</a>.
         </li>
       </ul>
     </div>
