@@ -8,7 +8,7 @@ env:
 	./env/bin/pip install -r requirements.txt
 
 env-upgrade:
-	./env/bin/python -mpip install -U -r requirements.txt
+	./env/bin/python -mpip install -U --upgrade-strategy eager -r requirements.txt
 
 build: env env-upgrade
 	./env/bin/python -mstaticplanetscipy config.json
