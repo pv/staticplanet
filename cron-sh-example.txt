@@ -21,6 +21,8 @@ Steps taken:
 3. `netlifyctl site create -n your-own-name-for-site -A $(cat token)`
 4. look up the site ID on the web interface and save to file ``site-id``
    the netlifyctl command needs it for uploading stuff
+5. setup the cron and check manually everything works and uploads
+6. update DNS `planet CNAME planetscipy.netlify.com.`
 
 Example shell script for periodic updates with cron follows:
 
