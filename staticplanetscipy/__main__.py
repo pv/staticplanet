@@ -205,9 +205,15 @@ def main():
         f.write(html)
 
     for fn in os.listdir(template_dir):
-        if fn != os.path.basename(index_file):
-            shutil.copytree(os.path.join(template_dir, fn),
-                            os.path.join(html_dir, fn))
+        if fn == os.path.basename(index_file):
+            continue
+
+        src = os.path.join(template_dir, fn)
+        dst = os.path.join(html_dir, fn)
+        if os.path.isdir(src):
+            shutil.copytree(src, dst)
+        else:
+            shutil.copyfile(src, dst)
 
     # Produce Atom feed
     print("\nWriting Atom...")
