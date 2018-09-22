@@ -17,6 +17,7 @@ import shutil
 import time
 import collections
 import datetime
+import locale
 
 import jinja2
 import requests
@@ -48,6 +49,8 @@ def main():
     p = argparse.ArgumentParser(usage=__doc__.lstrip())
     p.add_argument('config', help="Configuration file")
     args = p.parse_args()
+
+    locale.setlocale(locale.LC_COLLATE, '')
 
     # Load config
     with open(args.config, 'r') as f:
@@ -183,7 +186,11 @@ def main():
         return min(datetime.datetime.fromtimestamp(date_cache[item_id]), item.date)
 
     items.sort(key=sort_key, reverse=True)
-    feeds.sort(key=lambda item: item.title.lower())
+
+    def feed_sort_key(item):
+        return locale.strxfrm(item.title.lower())
+
+    feeds.sort(key=feed_sort_key)
 
     # Limit items
     del items[config['max_items']:]
