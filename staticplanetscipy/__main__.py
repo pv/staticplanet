@@ -32,7 +32,7 @@ except ImportError:
 
 from urllib.parse import quote_plus
 
-from . import atom
+from . import atom, opml
 
 
 Feed = collections.namedtuple(
@@ -242,6 +242,18 @@ def main():
                     author=config["title"],
                     title=config["title"],
                     link=config["url"])
+
+    # Produce OPML feed list
+    print("\nWriting OPML...")
+
+    def feed_opml_entries():
+        for item in feeds:
+            yield item.id, item.url, item.title
+
+    opml.write_opml(os.path.join(html_dir, "feedlist.opml"),
+                    feed_opml_entries(),
+                    title=config["title"],
+                    updated=updated)
 
 
 def get_filename(url, cache_dir):
