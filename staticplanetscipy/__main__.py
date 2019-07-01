@@ -327,6 +327,21 @@ def fetch_url(url, cache_dir, expire_time):
     return filename
 
 
+# Hack around a feedparser bug
+def _feedparser_monkeypatch(name):
+    func = getattr(feedparser, name)
+    def _patched(*a, **kw):
+        try:
+            return func(*a, **kw)
+        except (StopIteration, RuntimeError):
+            return None
+    setattr(feedparser, name, _patched)
+
+for name in dir(feedparser):
+    if name.startswith('_parse_georss_'):
+        _feedparser_monkeypatch(name)
+
+
 if sys.version_info[0] < 3:
     raise RuntimeError("Python 3 required.")
 
