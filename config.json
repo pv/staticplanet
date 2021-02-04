@@ -8,7 +8,7 @@
     "feeds": [
         "http://acsgsoc15.wordpress.com/feed/atom",
         "http://andy.terrel.us/feeds/scipy-tag.rss.xml",
-        "http://blog.enthought.com/feed/",
+        "https://enthought.com/blog/feed/",
         "http://blog.filipesaraiva.info/?feed=rss2&amp;tag=planet-scipy",
         "http://blog.fperez.org/feeds/posts/default",
         "http://blog.jarrodmillman.com/feeds/posts/default",
@@ -31,9 +31,8 @@
         "http://maheshakya.github.io/feed.xml",
         "http://manojbits.wordpress.com/category/scikit-learn/feed/atom",
         "http://markflorisson.wordpress.com/feed/atom",
-        "http://matt.eifelle.com/xml-rss2.php",
         "http://matthewrocklin.com/blog/feed.scipy.xml",
-        "http://mentat.za.net/blog/feeds/tag_python.atom.xml",
+        "https://mentat.za.net/blog/tags/python/atom.xml",
         "http://metarabbit.wordpress.com/tag/python/feed/atom",
         "http://mfitzp.io/feeds/python.tag.atom.xml",
         "https://neptune.ml/feed",
@@ -73,7 +72,7 @@
         "http://www.spyder-ide.org/blog/feed.xml",
         "http://xuewei4d.github.io/feed.xml",
         "https://pav.iki.fi/blog.xml",
-        "https://www.anaconda.com/feed/",
+        "https://www.anaconda.com/blog/feed/",
         "https://www.listendata.com/feeds/posts/default/-/Python"
     ]
 }
