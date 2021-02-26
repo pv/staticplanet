@@ -74,5 +74,6 @@
         "https://pav.iki.fi/blog.xml",
         "https://www.anaconda.com/blog/feed/",
         "https://www.listendata.com/feeds/posts/default/-/Python"
+        "https://www.nbshare.io/feeds/all.atom.xml"
     ]
 }
