@@ -8,7 +8,7 @@
     "feeds": [
         "http://acsgsoc15.wordpress.com/feed/atom",
         "http://andy.terrel.us/feeds/scipy-tag.rss.xml",
-        "https://enthought.com/blog/feed/",
+        "http://enthought.com/blog/feed/",
         "http://blog.filipesaraiva.info/?feed=rss2&amp;tag=planet-scipy",
         "http://blog.fperez.org/feeds/posts/default",
         "http://blog.jarrodmillman.com/feeds/posts/default",
@@ -63,7 +63,6 @@
         "http://travisvaught.blogspot.com/feeds/posts/default/-/python",
         "http://twiecki.github.io/atom.xml",
         "http://vcansimplify.wordpress.com/tag/gsoc/feed/atom",
-        "http://www.arinkverma.in/feeds/posts/default/-/GSOC13",
         "http://www.laurentluce.com/posts/tag/scipy/feed/",
         "http://www.leouieda.com/rss.xml",
         "http://www.logilab.org/bookmark/9844/follow",
@@ -73,7 +72,7 @@
         "http://xuewei4d.github.io/feed.xml",
         "https://pav.iki.fi/blog.xml",
         "https://www.anaconda.com/blog/feed/",
-        "https://www.listendata.com/feeds/posts/default/-/Python"
+        "https://www.listendata.com/feeds/posts/default/-/Python",
         "https://www.nbshare.io/feeds/all.atom.xml"
     ]
 }
