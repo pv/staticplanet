@@ -6,6 +6,7 @@
     "max_items": 100,
     "truncate_words": 160,
     "feeds": [
+        "https://ai-pool.com/feed.xml",
         "http://acsgsoc15.wordpress.com/feed/atom",
         "http://andy.terrel.us/feeds/scipy-tag.rss.xml",
         "http://enthought.com/blog/feed/",
